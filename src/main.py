@@ -43,17 +43,6 @@ def List_favorites():
     all_favorites = list(map(lambda favorite: favorite.serialize(), favorites))
     return jsonify(all_favorites)
 
-# @app.route('/people' , methods=['POST']) 
-# def create_people():
-#     body = request.get_json()
-#     people = People(name=body["name"],gender=body["gender"],height=body["height"],skin_color=body["skin_color"],hair_color=body["hair_color"])
-#     db.session.add(people)
-#     db.session.commit()
-
-#     res = jsonify(people.serialize())
-#     res.status_code = 201
-#     return res
-
 @app.route('/people', methods=['GET'])
 def list_peoples():
     peoples = People.query.all()
@@ -85,7 +74,71 @@ def list_planet(planet_id):
             raise APIException("Tarea no encontrada", 404)
 
         return jsonify(planet.serialize())
- 
+
+
+
+# @app.route('/favorite/planet/<int:planet_id>' , methods=['POST']) 
+# def add_planetfav(planet_id):
+#     body = request.get_json()
+#     planetfav = Favorites(planets_id=body["planets_id"],user_id=body["user_id"])
+#     db.session.add(planetfav)
+#     db.session.commit()
+#     return jsonify("ok"), 201
+  
+@app.route('/favorites/planet/<planets_id>', methods=['POST'])
+def add_planet_fav(planets_id):
+
+    body = request.get_json()
+    user_id = body["user_id"]
+    planets_id = body["planets_id"]
+
+    planetfav = Favorites(
+        user_id=user_id, planets_id=planets_id)
+    db.session.add(planetfav)
+    db.session.commit()
+    return jsonify("ok"), 201
+
+
+@app.route('/favorites/people/<people_id>', methods=['POST'])
+def add_people_fav(people_id):
+
+    body = request.get_json()
+    user_id = body["user_id"]
+    people_id = body["people_id"]
+
+    peoplefav = Favorites(
+        user_id=user_id, people_id=people_id)
+    db.session.add(peoplefav)
+    db.session.commit()
+    return jsonify("ok"), 201
+
+
+@app.route('/favorites/planet/<planet_id>', methods=['DELETE'])
+def delete_planet_fav(planet_id):
+
+    planetfav = Favorites.query.get(planet_id)
+    if planet_id is None:
+        raise APIException("PLANET DELETE", 201)
+    db.session.delete(planetfav)
+    db.session.commit()
+
+    return jsonify(planetfav.serialize())
+
+
+@app.route('/favorites/people/<people_id>', methods=['DELETE'])
+def delete_people_fav(people_id):
+
+    peoplefav = Favorites.query.get(people_id)
+    if people_id is None:
+        raise APIException("PEOPLE DELETE", 201)
+    db.session.delete(peoplefav)
+    db.session.commit()
+
+    return jsonify(peoplefav.serialize())
+
+
+
+
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
