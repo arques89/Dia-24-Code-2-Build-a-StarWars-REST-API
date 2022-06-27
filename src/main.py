@@ -94,7 +94,6 @@ def add_planet_fav(planets_id):
 
     body = request.get_json()
     user_id = body["user_id"]
-    planets_id = body["planets_id"]
 
     planetfav = Favorites(
         user_id=user_id, planets_id=planets_id)
@@ -108,7 +107,7 @@ def add_people_fav(people_id):
 
     body = request.get_json()
     user_id = body["user_id"]
-    people_id = body["people_id"]
+   
 
     peoplefav = Favorites(
         user_id=user_id, people_id=people_id)
