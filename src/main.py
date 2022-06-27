@@ -31,11 +31,15 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+#____________LIST ALL USERS____________#
+
 @app.route('/user', methods=['GET'])
 def List_users():
     users = User.query.all()
     all_users = list(map(lambda user: user.serialize(), users))
     return jsonify(all_users)
+
+#____________LIST ALL FAVORITES____________#
 
 @app.route('/user/favorites', methods=['GET'])
 def List_favorites():
@@ -43,17 +47,23 @@ def List_favorites():
     all_favorites = list(map(lambda favorite: favorite.serialize(), favorites))
     return jsonify(all_favorites)
 
+#____________LIST ALL PEOPLE____________#
+
 @app.route('/people', methods=['GET'])
 def list_peoples():
     peoples = People.query.all()
     all_peoples = list(map(lambda people: people.serialize(), peoples))
     return jsonify(all_peoples)
 
+#____________LIST ALL PLANETS____________#
+
 @app.route('/planet', methods=['GET'])
 def list_planets():
     planets = Planets.query.all()
     all_planets = list(map(lambda planet: planet.serialize(), planets))
     return jsonify(all_planets)
+
+#____________LIST DETAIL PEOPLE____________#
 
 @app.route('/people/<int:people_id>' , methods=['GET']) 
 def list_people(people_id):
@@ -65,6 +75,8 @@ def list_people(people_id):
 
         return jsonify(people.serialize())
 
+#____________LIST DETAILS PLANET____________#
+
 @app.route('/planet/<int:planet_id>' , methods=['GET']) 
 def list_planet(planet_id):
 
@@ -75,15 +87,7 @@ def list_planet(planet_id):
 
         return jsonify(planet.serialize())
 
-
-
-# @app.route('/favorite/planet/<int:planet_id>' , methods=['POST']) 
-# def add_planetfav(planet_id):
-#     body = request.get_json()
-#     planetfav = Favorites(planets_id=body["planets_id"],user_id=body["user_id"])
-#     db.session.add(planetfav)
-#     db.session.commit()
-#     return jsonify("ok"), 201
+#____________CREATE FAVORIT____________#
   
 @app.route('/favorites/planet/<planets_id>', methods=['POST'])
 def add_planet_fav(planets_id):
@@ -112,6 +116,7 @@ def add_people_fav(people_id):
     db.session.commit()
     return jsonify("ok"), 201
 
+#____________DELETE FAVORIT____________#
 
 @app.route('/favorites/planet/<planet_id>', methods=['DELETE'])
 def delete_planet_fav(planet_id):
